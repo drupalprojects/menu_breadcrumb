@@ -7,7 +7,7 @@ Introduction
 ------------
 By default, Drupal 6 will use the Navigation menu for the breadcrumb. This module allows you to use the menu the node belongs to for the breadcrumb on node pages. 
 
-Furthermore, it allows you to append the node title to the breadcrumb (as plain text or url).
+Furthermore, it allows you to append the page title to the breadcrumb (as plain text or url).
 
 Installation
 ------------
@@ -18,8 +18,8 @@ Installation
 Features
 --------
 - Allows you to use the menu the node belongs to for the breadcrumb on node pages.
-- Append the node title to the breadcrumb.
-- Optionally have the appended node title be an URL.
+- Append the page title to the breadcrumb.
+- Optionally have the appended page title be an URL.
 
 Issues / Feature requests
 -------------------------
