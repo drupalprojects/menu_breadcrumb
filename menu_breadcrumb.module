@@ -4,8 +4,9 @@
  * @file
  * The main file for the menu_breadcrumb module.
  *
- * By default, Drupal 6 will use the Navigation menu for the breadcrumb. This
- * module allows you to use the menu the current page belongs to.
+ * By default, Drupal 6 will use the Navigation menu for the breadcrumb.
+ * This module allows you to use the menu the current page belongs to for
+ * the breadcrumb.
  *
  * As an added bonus, it also allows you to append the page title to the
  * breadcrumb (either as a clickable url or not) and hide the breadcrumb
@@ -21,10 +22,10 @@ function menu_breadcrumb_help($path, $arg) {
   $output = '';
   switch ($path) {
     case 'admin/settings/modules#description':
-      $output = t('Allows you to use the menu the current page belongs to.');
+      $output = t('Allows you to use the menu the current page belongs to for the breadcrumb.');
       break;
     case 'admin/settings/menu_breadcrumb':
-      $output = t('<p>By default, Drupal 6 will use the Navigation menu for the breadcrumb. This module allows you to use the menu the current page belongs to.</p><p>As an added bonus, it also allows you to append the page title to the breadcrumb (either as a clickable url or not) and hide the breadcrumb if it only contains the link to the front page.</p>');
+      $output = t('<p>By default, Drupal 6 will use the Navigation menu for the breadcrumb. This module allows you to use the menu the current page belongs to for the breadcrumb.</p><p>As an added bonus, it also allows you to append the page title to the breadcrumb (either as a clickable url or not) and hide the breadcrumb if it only contains the link to the front page.</p>');
       break;
   }
   
@@ -108,7 +109,7 @@ function menu_breadcrumb_admin_settings_form() {
   $form['menu_breadcrumb_determine_menu'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use menu the page belongs to for the breadcrumb.'),
-    '#description' => t('By default, Drupal 6 will use the Navigation menu for the breadcrumb. If you want to use the menu the active page belongs to, enable this option.'),
+    '#description' => t('By default, Drupal 6 will use the Navigation menu for the breadcrumb. If you want to use the menu the active page belongs to for the breadcrumb, enable this option.'),
     '#default_value' => variable_get('menu_breadcrumb_determine_menu', 1),
   );
     
