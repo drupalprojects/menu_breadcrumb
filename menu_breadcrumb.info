@@ -1,5 +1,5 @@
 ; $Id$
 name = Menu breadcrumb
-description = Allows you to use the menu the node belongs to for breadcrumbs on node pages.
+description = Allows you to use the menu the current page belongs to.
 dependencies[] = menu
 core = 6.x

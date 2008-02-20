@@ -5,11 +5,11 @@
  * The main file for the menu_breadcrumb module.
  *
  * By default, Drupal 6 will use the Navigation menu for the breadcrumb. This
- * module allows you to use the menu the node belongs to for the breadcrumb
- * on node pages.
+ * module allows you to use the menu the current page belongs to.
  *
- * Furthermore, it allows you to append the page title to the breadcrumb
- * (as plain text or url).
+ * As an added bonus, it also allows you to append the page title to the
+ * breadcrumb (either as a clickable url or not) and hide the breadcrumb
+ * if it only contains the link to the front page.
  *
  * Maintained by: Geoffrey de Vlugt <gdevlugt@gmail.com>
  */
@@ -21,10 +21,10 @@ function menu_breadcrumb_help($path, $arg) {
   $output = '';
   switch ($path) {
     case 'admin/settings/modules#description':
-      $output = t('Allows you to use the menu the node belongs to for breadcrumbs on node pages.');
+      $output = t('Allows you to use the menu the current page belongs to.');
       break;
     case 'admin/settings/menu_breadcrumb':
-      $output = t('<p>By default, Drupal 6 will use the Navigation menu for the breadcrumb. This module allows you to use the menu the node belongs to for the breadcrumb on node pages.</p><p>As an added bonus, it also allows you to append the page title to the breadcrumb (either as a clickable url or not).</p>');
+      $output = t('<p>By default, Drupal 6 will use the Navigation menu for the breadcrumb. This module allows you to use the menu the current page belongs to.</p><p>As an added bonus, it also allows you to append the page title to the breadcrumb (either as a clickable url or not) and hide the breadcrumb if it only contains the link to the front page.</p>');
       break;
   }
   
@@ -56,6 +56,7 @@ function menu_breadcrumb_enable() {
   variable_set('menu_breadcrumb_determine_menu', 1);
   variable_set('menu_breadcrumb_append_node_title', 0);
   variable_set('menu_breadcrumb_append_node_url', 0);
+  variable_set('menu_breadcrumb_hide_on_single_item', 0);
 }
 
 /**
@@ -65,37 +66,36 @@ function menu_breadcrumb_disable() {
   variable_del('menu_breadcrumb_determine_menu');
   variable_del('menu_breadcrumb_append_node_title');
   variable_del('menu_breadcrumb_append_node_url');
-}
-
-/**
- * Implementation of hook_nodeapi().
- */
-function menu_breadcrumb_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  if ($op == 'view' && $a3 == 0 && variable_get('menu_breadcrumb_determine_menu', 1) == 1) {
-    /* Determine the menu the node belongs to. Code based on Local Menu module. */
-    $menu_item = menu_get_item();
-    $menu_link = menu_link_load(db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s'", $menu_item['href'])));
-    $use_menu = $menu_link['menu_name'];
-    menu_set_active_menu_name($use_menu);
-  }
+  variable_del('menu_breadcrumb_hide_on_single_item');
 }
 
 /**
  * Implementation of hook_init().
  */
 function menu_breadcrumb_init() {
-  if (variable_get('menu_breadcrumb_append_node_title', 0) == 1) {
-    $breadcrumb = drupal_get_breadcrumb();
+  if (variable_get('menu_breadcrumb_determine_menu', 1)) {
+    $menu_item = menu_get_item();
+    $menu_link = menu_link_load(db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s'", $menu_item['href'])));
+    $use_menu = $menu_link['menu_name'];
+    menu_set_active_menu_name($use_menu);
+  }
 
+  $breadcrumb = drupal_get_breadcrumb();
+  
+  if (variable_get('menu_breadcrumb_append_node_title', 0) == 1) {
     if (variable_get('menu_breadcrumb_append_node_url', 0) == 1) {
       $breadcrumb[] = l(drupal_get_title(), $_GET['q']);
     }
     else {
       $breadcrumb[] = drupal_get_title();
     }
-
-    drupal_set_breadcrumb($breadcrumb);
   }
+    
+  if (count($breadcrumb) == 1 && variable_get('menu_breadcrumb_hide_on_single_item', 0)) {
+    $breadcrumb = array();
+  }
+    
+  drupal_set_breadcrumb($breadcrumb);
 }
 
 /**
@@ -107,23 +107,30 @@ function menu_breadcrumb_init() {
 function menu_breadcrumb_admin_settings_form() {
   $form['menu_breadcrumb_determine_menu'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Use menu the node belongs to for the breadcrumb.'),
-    '#description' => t('By default, Drupal 6 will use the Navigation menu for the breadcrumb. If you want to use the menu the node belongs to, enable this option.'),
+    '#title' => t('Use menu the page belongs to for the breadcrumb.'),
+    '#description' => t('By default, Drupal 6 will use the Navigation menu for the breadcrumb. If you want to use the menu the active page belongs to, enable this option.'),
     '#default_value' => variable_get('menu_breadcrumb_determine_menu', 1),
   );
     
   $form['menu_breadcrumb_append_node_title'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Append node title to breadcrumb'),
+    '#title' => t('Append page title to breadcrumb'),
     '#description' => t('Choose whether or not the page title should be included in the breadcrumb.'),
     '#default_value' => variable_get('menu_breadcrumb_append_node_title', 0),
   );
 
   $form['menu_breadcrumb_append_node_url'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Appended node title as an URL.'),
+    '#title' => t('Appended page title as an URL.'),
     '#description' => t('Choose whether or not the appended page title should be an URL.'),
     '#default_value' => variable_get('menu_breadcrumb_append_node_url', 0),
+  );
+
+  $form['menu_breadcrumb_hide_on_single_item'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide the breadcrumb if the breadcrumb only contains the link to the front page.'),
+    '#description' => t('Choose whether or not the breadcrumb should be hidden if the breadcrumb only contains a link to the front page (<em>Home</em>.).'),
+    '#default_value' => variable_get('menu_breadcrumb_hide_on_single_item', 0),
   );
 
   return system_settings_form($form);

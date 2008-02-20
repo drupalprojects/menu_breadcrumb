@@ -3,14 +3,14 @@
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
-#  menu_breadcrumb.module,v 1.1 2008/02/14 18:18:13 gdevlugt
+#  menu_breadcrumb.module,v 1.2 2008/02/14 22:42:13 gdevlugt
 #  menu_breadcrumb.info,v 1.1 2008/02/14 18:18:13 gdevlugt
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2008-02-14 23:36+0100\n"
+"POT-Creation-Date: 2008-02-20 19:45+0100\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -20,23 +20,23 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: menu_breadcrumb.module:24 menu_breadcrumb.info:0
-msgid "Allows you to use the menu the node belongs to for breadcrumbs on node pages."
+msgid "Allows you to use the menu the current page belongs to."
 msgstr ""
 
 #: menu_breadcrumb.module:27
-msgid "<p>By default, Drupal 6 will use the Navigation menu for the breadcrumb. This module allows you to use the menu the node belongs to for the breadcrumb on node pages.</p><p>As an added bonus, it also allows you to append the page title to the breadcrumb (either as a clickable url or not).</p>"
+msgid "<p>By default, Drupal 6 will use the Navigation menu for the breadcrumb. This module allows you to use the menu the current page belongs to.</p><p>As an added bonus, it also allows you to append the page title to the breadcrumb (either as a clickable url or not) and hide the breadcrumb if it only contains the link to the front page.</p>"
 msgstr ""
 
 #: menu_breadcrumb.module:110
-msgid "Use menu the node belongs to for the breadcrumb."
+msgid "Use menu the page belongs to for the breadcrumb."
 msgstr ""
 
 #: menu_breadcrumb.module:111
-msgid "By default, Drupal 6 will use the Navigation menu for the breadcrumb. If you want to use the menu the node belongs to, enable this option."
+msgid "By default, Drupal 6 will use the Navigation menu for the breadcrumb. If you want to use the menu the active page belongs to, enable this option."
 msgstr ""
 
 #: menu_breadcrumb.module:117
-msgid "Append node title to breadcrumb"
+msgid "Append page title to breadcrumb"
 msgstr ""
 
 #: menu_breadcrumb.module:118
@@ -44,11 +44,19 @@ msgid "Choose whether or not the page title should be included in the breadcrumb
 msgstr ""
 
 #: menu_breadcrumb.module:124
-msgid "Appended node title as an URL."
+msgid "Appended page title as an URL."
 msgstr ""
 
 #: menu_breadcrumb.module:125
 msgid "Choose whether or not the appended page title should be an URL."
+msgstr ""
+
+#: menu_breadcrumb.module:131
+msgid "Hide the breadcrumb if the breadcrumb only contains the link to the front page."
+msgstr ""
+
+#: menu_breadcrumb.module:132
+msgid "Choose whether or not the breadcrumb should be hidden if the breadcrumb only contains a link to the front page (<em>Home</em>.)."
 msgstr ""
 
 #: menu_breadcrumb.info:0
