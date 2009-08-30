@@ -94,7 +94,7 @@ function menu_breadcrumb_init() {
   
   if (variable_get('menu_breadcrumb_append_node_title', 0) == 1) {
     if (variable_get('menu_breadcrumb_append_node_url', 0) == 1) {
-      $breadcrumb[] = l(drupal_get_title(), $_GET['q']);
+      $breadcrumb[] = l(drupal_get_title(), $_GET['q'], array('html' => TRUE,));
     }
     else {
       $breadcrumb[] = drupal_get_title();
