@@ -75,10 +75,19 @@ function menu_breadcrumb_disable() {
  */
 function menu_breadcrumb_init() {
   if (variable_get('menu_breadcrumb_determine_menu', 1)) {
+    $menu_list = variable_get('menu_breadcrumb_menus', array('admin_menu', 'devel'));
+    $filter = variable_get('menu_breadcrumb_menus_filter', 'blacklist');
     $menu_item = menu_get_item();
-    $menu_link = menu_link_load(db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s'", $menu_item['href'])));
-    $use_menu = $menu_link['menu_name'];
-    menu_set_active_menu_name($use_menu);
+    $result = db_query("SELECT mlid, menu_name FROM {menu_links} WHERE link_path = '%s'", $menu_item['href']);
+    while ($menu_link = db_fetch_array($result)) {
+      // @see http://www.php.net/manual/en/function.in-array.php#86695
+      $menu_in_list = in_array($menu_link['menu_name'], $menu_list, TRUE);
+      if ( ( $filter == 'whitelist' && $menu_in_list ) ||
+           ( $filter == 'blacklist' && !$menu_in_list ) ) {
+        menu_set_active_menu_name($menu_link['menu_name']);
+        break;
+      }
+    }
   }
 
   $breadcrumb = drupal_get_breadcrumb();
@@ -132,6 +141,31 @@ function menu_breadcrumb_admin_settings_form() {
     '#title' => t('Hide the breadcrumb if the breadcrumb only contains the link to the front page.'),
     '#description' => t('Choose whether or not the breadcrumb should be hidden if the breadcrumb only contains a link to the front page (<em>Home</em>.).'),
     '#default_value' => variable_get('menu_breadcrumb_hide_on_single_item', 0),
+  );
+
+  $include_exclude_description = 'Use this to specify which menus are used to generate breadcrumbs. ' ;
+  $form['include_exclude'] = array( 
+    '#type' => 'fieldset',
+    '#title' => t('Include / Exclude Menus'),
+    '#description' => t($include_exclude_description),
+  ) ;
+
+  $form['include_exclude']['menu_breadcrumb_menus_filter'] = array(
+    '#type' => 'radios',
+    '#title' => t('Menu filter'),
+    '#options' => array(
+      'blacklist' => t('Blacklist - Menu items will never be chosen from the menus selected below.'),
+      'whitelist' => t('Whitelist - Menu items will only be chosen from the menus selected below.'),
+    ),
+    '#default_value' => variable_get('menu_breadcrumb_menus_filter', 'blacklist'),
+  );
+
+  $form['include_exclude']['menu_breadcrumb_menus'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Menu list'),
+    '#description' => t('Select which menus to apply the blacklist / whitelist to.'),
+    '#options' => drupal_map_assoc(menu_get_names()),
+    '#default_value' => variable_get('menu_breadcrumb_menus', array('admin_menu', 'devel')),
   );
 
   return system_settings_form($form);
