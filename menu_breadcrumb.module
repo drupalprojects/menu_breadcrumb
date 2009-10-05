@@ -51,26 +51,6 @@ function menu_breadcrumb_menu() {
 }
 
 /**
- * Implementation of hook_enable().
- */
-function menu_breadcrumb_enable() {
-  variable_set('menu_breadcrumb_determine_menu', 1);
-  variable_set('menu_breadcrumb_append_node_title', 0);
-  variable_set('menu_breadcrumb_append_node_url', 0);
-  variable_set('menu_breadcrumb_hide_on_single_item', 0);
-}
-
-/**
- * Implementation of hook_disable().
- */
-function menu_breadcrumb_disable() {
-  variable_del('menu_breadcrumb_determine_menu');
-  variable_del('menu_breadcrumb_append_node_title');
-  variable_del('menu_breadcrumb_append_node_url');
-  variable_del('menu_breadcrumb_hide_on_single_item');
-}
-
-/**
  * Implementation of hook_init().
  */
 function menu_breadcrumb_init() {
