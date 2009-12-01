@@ -17,18 +17,13 @@ Installation
 
 Upgrading
 ---------
-Just overwrite (or replace) the older menu_breadcrumb folder with the newer version.
+Replace the older menu_breadcrumb folder with the newer version, and then run update.php in case there are any database updates to apply.
 
 Features
 --------
 - Allows you to use the menu the node belongs to for the breadcrumb on node pages.
 - Append the page title to the breadcrumb.
 - Optionally have the appended page title be an URL.
-
-Changes since version 6.x-1.0
------------------------------
-- Now works on all pages, not just node pages.
-- New option allowing you to hide the breadcrumb if it only contains the link to the front page.
 
 Issues / Feature requests
 -------------------------
