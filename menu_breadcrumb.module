@@ -319,8 +319,7 @@ function menu_breadcrumb_init() {
         // Look for each of the $menu_link_menus in the pattern match cache.
         foreach (array_keys($menu_link_menus) as $menu_link_menu_name) {
           if (array_key_exists($menu_link_menu_name, $match_cache)
-              && $match_cache[$menu_link_menu_name] == $menu_name)
-          {
+              && $match_cache[$menu_link_menu_name] == $menu_name) {
             menu_set_active_menu_name($menu_link_menu_name);
             break 2;
           }
