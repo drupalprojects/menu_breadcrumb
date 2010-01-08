@@ -1,30 +1,33 @@
-# Hungarian translation of menu_breadcrumb (6.x-1.1)
-# Copyright (c) 2009 by the Hungarian translation team
-# Generated from files:
-#  menu_breadcrumb.module,v 1.4 2008/02/20 18:56:34 gdevlugt
-#  menu_breadcrumb.info,v 1.3 2008/02/20 18:51:40 gdevlugt
+# Hungarian translation of Menu Breadcrumb (6.x-1.2)
+# Copyright (c) 2010 by the Hungarian translation team
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: menu_breadcrumb (6.x-1.1)\n"
-"POT-Creation-Date: 2009-02-10 12:09-0600\n"
-"PO-Revision-Date: 2009-02-08 16:19-0600\n"
-"Last-Translator: Domokos Endre János\n"
-"Language-Team: Hungarian http://forditas.mindworks.hu\n"
+"Project-Id-Version: Menu Breadcrumb (6.x-1.2)\n"
+"POT-Creation-Date: 2010-01-08 18:44+0000\n"
+"PO-Revision-Date: 2010-01-08 12:56+0000\n"
+"Language-Team: Hungarian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
-#: menu_breadcrumb.module:25; menu_breadcrumb.info:0
+msgid "Enabled"
+msgstr "Engedélyezett"
+msgid "Weight"
+msgstr "Súly"
+msgid "Menu"
+msgstr "Menü"
+msgid "Advanced"
+msgstr "Haladó"
+msgid "pattern"
+msgstr "minta"
 msgid ""
 "Allows you to use the menu the current page belongs to for the "
 "breadcrumb."
 msgstr ""
 "Lehetővé teszi az aktuális laphoz tartozó menü használatát a "
 "morzsában."
-
-#: menu_breadcrumb.module:28
 msgid ""
 "<p>By default, Drupal 6 will use the Navigation menu for the "
 "breadcrumb. This module allows you to use the menu the current page "
@@ -39,12 +42,8 @@ msgstr ""
 "lehetőségként hozzá lehet adni a lap címét a morzsához "
 "(kattintható webcímként, vagy simán), és el lehet rejteni a "
 "morzsát, ha az csak egy hivatkozást tartalmaz a kezdőlapra.</p>"
-
-#: menu_breadcrumb.module:111
 msgid "Use menu the page belongs to for the breadcrumb."
 msgstr "Használja a laphoz tartozó menüt morzsának."
-
-#: menu_breadcrumb.module:112
 msgid ""
 "By default, Drupal 6 will use the Navigation menu for the breadcrumb. "
 "If you want to use the menu the active page belongs to for the "
@@ -53,50 +52,92 @@ msgstr ""
 "Alapértelmezés szerint a Drupal 6 a navigációs menüt fogja "
 "használni morzsának. Ha az aktív laphoz tartozó menü jelenjen meg "
 "inkább a morzsában, akkor engedélyezni kell ezt a lehetőséget."
-
-#: menu_breadcrumb.module:118
 msgid "Append page title to breadcrumb"
 msgstr "Az oldal címének hozzáadása a morzsához"
-
-#: menu_breadcrumb.module:119
 msgid ""
 "Choose whether or not the page title should be included in the "
 "breadcrumb."
 msgstr "Legyen, vagy ne legyen a lap címe a morzsában."
-
-#: menu_breadcrumb.module:125
 msgid "Appended page title as an URL."
 msgstr "A hozzáadott lapcím hivatkozásként működjön."
-
-#: menu_breadcrumb.module:126
 msgid "Choose whether or not the appended page title should be an URL."
 msgstr "A hozzáadott lap címe webcím (hivatkozás) legyen, vagy ne."
-
-#: menu_breadcrumb.module:132
 msgid ""
 "Hide the breadcrumb if the breadcrumb only contains the link to the "
 "front page."
 msgstr ""
 "Rejtse el a morzsát, ha a morzsa csak egy hivatkozást tartalmaz a "
 "főoldalra."
-
-#: menu_breadcrumb.module:133
 msgid ""
 "Choose whether or not the breadcrumb should be hidden if the "
 "breadcrumb only contains a link to the front page (<em>Home</em>.)."
 msgstr ""
 "Rejtse el, vagy legyen látható a morzsa akkor is, ha csak egy "
 "hivatkozást tartalamz a címlapra (<em>Címlap</em>)."
-
-#: menu_breadcrumb.module:42; menu_breadcrumb.info:0
 msgid "Menu breadcrumb"
-msgstr "Menü morzsa"
-
-#: menu_breadcrumb.module:43
+msgstr "Menümorzsa"
 msgid "Configure menu breadcrumb."
-msgstr "Menü morzsa beállítása"
-
-#: menu_breadcrumb.module:0
-msgid "menu_breadcrumb"
-msgstr "menu_breadcrumb"
-
+msgstr "Menümorzsa beállítása"
+msgid "Patterns"
+msgstr "Minták"
+msgid "Enable / Disable Menus"
+msgstr "Menük engedélyezése / tiltása"
+msgid ""
+"The breadcrumb will be generated from the first \"enabled\" menu that "
+"contains a menu item for the page. Re-order the list to change the "
+"priority of each menu."
+msgstr ""
+"A morzsa az első olyan „engedélyezett” menüből lesz "
+"létrehozva, ami tartalmazza a menüelemet az oldalhoz. A lista "
+"újrarendezése megváltoztatja a menük fontosságát."
+msgid ""
+"Note: If none of the enabled menus contain an item for a given page, "
+"Drupal will look in the 'Navigation' menu by default, even if it is "
+"'disabled' here."
+msgstr ""
+"Megjegyzés: Ha nincs engedélyezett menü, amely tartalmaz elemet az "
+"adott oldalhoz, akkor a Drupal a navigációs menüt fogja nézni "
+"alapértelmezés szerint akkor is, ha az itt „tiltott”."
+msgid "<span title=\"@title\">@name <em>(@hint)</em></span>"
+msgstr "<span title=\"@title\">@name <em>(@hint)</em></span>"
+msgid "See 'Advanced' settings below."
+msgstr "Lásd a „haladó” beállításokat lejjebb."
+msgid "<em><span title=\"@title\">@text</span></em>"
+msgstr "<em><span title=\"@title\">@text</span></em>"
+msgid "Default setting for future menus."
+msgstr "A jövőbeli menük alapértelmezés szerinti beállítása"
+msgid "Default setting (see below)"
+msgstr "Alapértelmezés szerinti beállítás (lásd lejjebb)"
+msgid ""
+"<strong>Default setting</strong> is not a real menu - it defines the "
+"default position and enabled status for future menus. If it is "
+"\"enabled\", Menu Breadcrumb will automatically consider newly-added "
+"menus when establishing breadcrumbs. If it is disabled, new menus will "
+"not be used for breadcrumbs until they have explicitly been enabled "
+"here."
+msgstr ""
+"Az <strong>alapértelmezés szerinti beállítás</strong> nem egy "
+"igazi menü. Ez meghatározza az alapértelmezés szerinti helyzetet "
+"és engedélyezési állapotot a jövőbeli menük számára. Ha ez "
+"„engedélyezett”, akkor a menümorzsa  automatikusan kezeli az "
+"újonnan hozzáadott menüket, amikor csatlakoznak a morzsához. Ha ez "
+"„tiltott”, akkor az új menük nem lesznek a morzsában "
+"felhasználva mindaddíg, amíg nincsenek itt külön engedélyezve."
+msgid ""
+"Enter regular expressions (one per line) to aggregate matching menu "
+"names into a single replacement title in the above list."
+msgstr ""
+"Regulási kifejezés megadása (soronként egy), mely összesíti az "
+"egyező menüneveket egyetlen helyettesítési címbe a fenti listán."
+msgid "Syntax: /regex/title/<br/>e.g.: /^book-toc-d+$/Books/"
+msgstr "Formátum: /regex/title/<br/>például: /^book-toc-d+$/Books/"
+msgid "Invalid pattern syntax."
+msgstr "Érvénytelen formátumú minta."
+msgid ""
+"Menu Breadcrumb's menu selection settings have changed recently. "
+"Please review the !settings and check that the correct menus are "
+"selected."
+msgstr ""
+"A menümorzsa menükiválasztási beállításai nemrég "
+"megváltoztak. Át kell nézni a !settings és ellenőrizni kell, hogy "
+"a helyes menük vannak kiválasztva."
