@@ -524,7 +524,11 @@ function menu_breadcrumb_admin_settings_form_validate($form, &$form_state) {
   if ($patterns) {
     foreach (explode("\n", $patterns) as $pattern) {
       if (!preg_match(MENU_BREADCRUMB_REGEX_MATCH, $pattern)) {
-        form_set_error('menu_breadcrumb_menu_patterns', t("Invalid pattern syntax."));
+        $t_args = array(
+          '%pattern' => $pattern, 
+          '%regex'   => MENU_BREADCRUMB_REGEX_MATCH
+        ) ;
+        form_set_error('menu_breadcrumb_menu_patterns', t("Invalid pattern syntax: %pattern does not match %regex", $t_args));
       }
     }
   }
