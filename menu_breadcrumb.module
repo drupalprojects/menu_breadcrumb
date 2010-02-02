@@ -450,7 +450,7 @@ function menu_breadcrumb_admin_settings_form() {
       ),
       'title_display' => array(
         '#type' => 'markup',
-        '#value' => $title,
+        '#value' => check_plain($title),
       ),
     );
 
