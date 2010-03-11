@@ -300,7 +300,8 @@ function menu_breadcrumb_menu_list() {
  * Set the active menu according to the current path.
  */
 function menu_breadcrumb_init() {
-  if (variable_get('menu_breadcrumb_determine_menu', 1)) {
+  $is_front = drupal_is_front_page();
+  if (variable_get('menu_breadcrumb_determine_menu', 1) && !$is_front) {
     // Find the set of menus containing a link for the current page.
     $menu_item = menu_get_item();
     $result = db_query("SELECT mlid, menu_name FROM {menu_links} WHERE link_path = '%s'", $menu_item['href']);
@@ -339,10 +340,10 @@ function menu_breadcrumb_init() {
 
   if (variable_get('menu_breadcrumb_append_node_title', 0) == 1) {
     if (variable_get('menu_breadcrumb_append_node_url', 0) == 1) {
-      $breadcrumb[] = l(drupal_get_title(), $_GET['q'], array('html' => TRUE));
+      $breadcrumb[] = $is_front ? l(t('Home'), '<front>') : l(drupal_get_title(), $_GET['q'], array('html' => TRUE,));
     }
     else {
-      $breadcrumb[] = drupal_get_title();
+      $breadcrumb[] = $is_front ? t('Home') : drupal_get_title();
     }
   }
 
