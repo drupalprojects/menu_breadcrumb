@@ -304,10 +304,10 @@ function menu_breadcrumb_init() {
   if (variable_get('menu_breadcrumb_determine_menu', 1) && !$is_front) {
     // Find the set of menus containing a link for the current page.
     $menu_item = menu_get_item();
-    $result = db_query("SELECT mlid, menu_name FROM {menu_links} WHERE link_path = '%s'", $menu_item['href']);
+    $result = db_query("SELECT mlid, menu_name FROM {menu_links} WHERE link_path = :menu_item", array(':menu_item' => $menu_item['href']));
     $menu_link_menus = array();
-    while ($menu_link = db_fetch_array($result)) {
-      $menu_link_menus[$menu_link['menu_name']] = TRUE;
+    foreach ($result as $menu_link) {
+      $menu_link_menus[$menu_link->menu_name] = TRUE;
     }
 
     // Choose the highest-priority 'Enabled' menu.
@@ -328,7 +328,9 @@ function menu_breadcrumb_init() {
       }
       else {
         if (array_key_exists($menu_name, $menu_link_menus)) {
-          menu_set_active_menu_name($menu_name);
+          $active_menus = menu_get_active_menu_names();
+          $active_menus[] = $menu_name;
+          menu_set_active_menu_names($active_menus);
           break;
         }
       }
