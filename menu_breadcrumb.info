@@ -5,3 +5,4 @@ dependencies[] = menu
 core = "7.x"
 files[] = menu_breadcrumb.install
 files[] = menu_breadcrumb.module
+configure = admin/config/menu_breadcrumb
