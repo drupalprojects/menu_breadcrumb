@@ -24,10 +24,10 @@ define('MENU_BREADCRUMB_REGEX_MATCH', '%^(/.+/)([^/]+)/$%');
 function menu_breadcrumb_help($path, $arg) {
   $output = '';
   switch ($path) {
-    case 'admin/settings/modules#description':
+    case 'admin/config/modules#description':
       $output = t('Allows you to use the menu the current page belongs to for the breadcrumb.');
       break;
-    case 'admin/settings/menu_breadcrumb':
+    case 'admin/config/menu_breadcrumb':
       $output = t('<p>By default, Drupal 6 will use the Navigation menu for the breadcrumb. This module allows you to use the menu the current page belongs to for the breadcrumb.</p><p>As an added bonus, it also allows you to append the page title to the breadcrumb (either as a clickable url or not) and hide the breadcrumb if it only contains the link to the front page.</p>');
       break;
   }
@@ -41,7 +41,7 @@ function menu_breadcrumb_help($path, $arg) {
 function menu_breadcrumb_menu() {
   $items = array();
 
-  $items['admin/settings/menu_breadcrumb'] = array(
+  $items['admin/config/menu_breadcrumb'] = array(
     'title' => 'Menu breadcrumb',
     'description' => 'Configure menu breadcrumb.',
     'page callback' => 'drupal_get_form',
@@ -122,7 +122,7 @@ function _menu_breadcrumb_get_menus() {
     // Remove any defunct menu names. Only visible if we are showing
     // the admin settings form, so don't waste time processing this
     // otherwise.
-    if ($_GET['q'] == 'admin/settings/menu_breadcrumb') {
+    if ($_GET['q'] == 'admin/config/menu_breadcrumb') {
       $current_menu_names = array_merge($drupal_menu_names, array_unique($match_cache), array('menu_breadcrumb_default_menu'));
       $menus_current = array_intersect(array_keys($menus), $current_menu_names);
       $menus = array_intersect_key($menus, array_flip($menus_current));
@@ -552,7 +552,7 @@ function menu_breadcrumb_admin_settings_form_submit($form, &$form_state) {
 function menu_breadcrumb_theme() {
   return array(
     'menu_breadcrumb_menus_table' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
   );
 }
@@ -560,30 +560,30 @@ function menu_breadcrumb_theme() {
 /**
  * Theme a drag-to-reorder table of menu selection checkboxes.
  */
-function theme_menu_breadcrumb_menus_table($element) {
+function theme_menu_breadcrumb_menus_table($variables) {
   drupal_add_tabledrag('menu-breadcrumb-menus', 'order', 'sibling', 'menu-weight');
-
-  $header = array(
+  $table['attributes']['id'] = 'menu-breadcrumb-menus' ;
+  $table['header'] = array(
     t('Menu'),
     t('Enabled'),
     t('Weight'),
   );
 
   // Generate table of draggable menu names.
-  $rows = array();
-  foreach (element_children($element) as $menu_name) {
-    $element[$menu_name]['weight']['#attributes']['class'] = 'menu-weight';
-    $rows[] = array(
+  $table['rows'] = array();
+  foreach (element_children($variables['element']) as $menu_name) {
+    $variables['element'][$menu_name]['weight']['#attributes']['class'] = 'menu-weight';
+    $table['rows'][] = array(
       'data' => array(
-        drupal_render($element[$menu_name]['title_display']),
-        drupal_render($element[$menu_name]['enabled']),
-        drupal_render($element[$menu_name]['weight']),
+        drupal_render($variables['element'][$menu_name]['title_display']),
+        drupal_render($variables['element'][$menu_name]['enabled']),
+        drupal_render($variables['element'][$menu_name]['weight']),
       ),
-      'class' => 'draggable',
+      'class' => array( 'draggable' ),
     );
   }
 
-  return theme('table', $header, $rows, array('id' => 'menu-breadcrumb-menus'));
+  return theme('table', $table);
 }
 
 /**
