@@ -3,4 +3,4 @@ description = Allows you to use the menu the current page belongs to for the bre
 dependencies[] = menu
 core = "7.x"
 files[] = menu_breadcrumb.install
-configure = admin/config/menu_breadcrumb
+configure = admin/config/user-interface/menu-breadcrumb
