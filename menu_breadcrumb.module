@@ -290,6 +290,18 @@ function menu_breadcrumb_menu_list() {
 }
 
 /**
+ * Implementation of hook_menu_breadcrumb_alter().
+ *
+ * Alter links in the active trail before it is rendered as the breadcrumb.
+ */
+function menu_breadcrumb_menu_breadcrumb_alter(&$active_trail, $item) {
+  // Removes "Home" link to the front page, in case you already have one.
+  if (variable_get('menu_breadcrumb_remove_home_link', FALSE) && $active_trail[0]['href'] === '<front>') {
+    array_shift($active_trail);
+  }
+}
+
+/**
  * Implementation of hook_init().
  *
  * Set the active menu according to the current path.
@@ -387,6 +399,13 @@ function menu_breadcrumb_admin_settings_form() {
     '#title' => t('Hide the breadcrumb if the breadcrumb only contains the link to the front page.'),
     '#description' => t('Choose whether or not the breadcrumb should be hidden if the breadcrumb only contains a link to the front page (<em>Home</em>.).'),
     '#default_value' => variable_get('menu_breadcrumb_hide_on_single_item', 0),
+  );
+
+  $form['menu_breadcrumb_remove_home_link'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Remove "Home" link.'),
+    '#description' => t('Removes "Home" link to the front page, in case you already have one.'),
+    '#default_value' => variable_get('menu_breadcrumb_remove_home_link', 0),
   );
 
   $form['include_exclude'] = array(
