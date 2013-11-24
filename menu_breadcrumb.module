@@ -117,7 +117,7 @@ function _menu_breadcrumb_get_menus() {
     // Remove any defunct menu names. Only visible if we are showing
     // the admin settings form, so don't waste time processing this
     // otherwise.
-    if ($_GET['q'] == 'admin/config/menu_breadcrumb') {
+    if ($_GET['q'] == 'admin/config/user-interface/menu-breadcrumb') {
       $current_menu_names = array_merge($drupal_menu_names, array_unique($match_cache), array('menu_breadcrumb_default_menu'));
       $menus_current = array_intersect(array_keys($menus), $current_menu_names);
       $menus = array_intersect_key($menus, array_flip($menus_current));
