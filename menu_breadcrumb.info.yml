@@ -1,0 +1,6 @@
+name: Menu breadcrumb
+type: module
+description: 'Allows you to use the menu the current page belongs to for the breadcrumb.'
+version: VERSION
+core: 8.x
+configure: menu_breadcrumb.settings
