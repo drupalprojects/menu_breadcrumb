@@ -1,9 +1,0 @@
-<?php
-
-/**
- * Implements hook_uninstall().
- */
-function menu_breadcrumb_uninstall() {
-  $config = Drupal::config('menu_breadcrumb.menu');
-  $config->delete();
-}

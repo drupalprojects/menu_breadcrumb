@@ -1,0 +1,6 @@
+services:
+  menu_breadcrumb.breadcrumb.default:
+    class: Drupal\menu_breadcrumb\MenuBasedBreadcrumbBuilder
+    arguments: ['@config.factory', '@menu.active_trail', '@plugin.manager.menu.link', '@router.admin_context']
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }
