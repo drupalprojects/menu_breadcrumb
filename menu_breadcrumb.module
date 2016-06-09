@@ -366,10 +366,10 @@ function menu_breadcrumb_init() {
   if (variable_get('menu_breadcrumb_append_node_title', 0) == 1) {
     $node_title = filter_xss(menu_get_active_title(), array());
     if (variable_get('menu_breadcrumb_append_node_url', 0) == 1) {
-      $breadcrumb[] = $is_front ? l(t('Home'), '<front>') : l($node_title, $_GET['q'], array('html' => TRUE));
+      $breadcrumb[] = $is_front ? l(t('Home'), '<front>') : l(t($node_title), $_GET['q'], array('html' => TRUE,));
     }
     else {
-      $breadcrumb[] = $is_front ? t('Home') : $node_title;
+      $breadcrumb[] = $is_front ? t('Home') : t($node_title);
     }
   }
 
