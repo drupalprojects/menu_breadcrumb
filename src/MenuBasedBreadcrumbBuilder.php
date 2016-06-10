@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @file
  * MenuBasedBreadcrumbBuilder.php
  */
+
 namespace Drupal\menu_breadcrumb;
 
 use Drupal\Component\Utility\SortArray;
@@ -12,8 +14,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
-use Drupal\Core\Menu\MenuLinkTreeElement;
-use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -49,6 +49,9 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected $adminContext;
 
+  /**
+   * Constructs the MenuBasedBreadcrumbBuilder.
+   */
   public function __construct(ConfigFactoryInterface $configFactory, MenuActiveTrailInterface $menuActiveTrail, MenuLinkManagerInterface $linkManager, AdminContext $adminContext) {
     $this->configFactory = $configFactory;
     $this->config = $this->configFactory->get('menu_breadcrumb.settings');
@@ -69,8 +72,8 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function applies(RouteMatchInterface $route_match) {
     return $this->config->get('determine_menu') &&
-      !($this->config->get('disable_admin_page') &&
-        $this->adminContext->isAdminRoute($route_match->getRouteObject()));
+    !($this->config->get('disable_admin_page') &&
+      $this->adminContext->isAdminRoute($route_match->getRouteObject()));
   }
 
   /**
