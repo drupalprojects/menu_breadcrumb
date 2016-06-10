@@ -10,9 +10,9 @@ As an added bonus, it also allows you to append the page title to the breadcrumb
 
 Installation
 ------------
-1. Copy the menu_breadcrumb folder to your sites/all/modules directory.
-2. At Administer -> Site building -> Modules (admin/build/modules) enable the module.
-3. Configure the module settings at Administer -> Site configuration -> Menu breadcrumb (admin/settings/menu_breadcrumb).
+1. Copy the menu_breadcrumb folder to your modules/contrib directory.
+2. At Administer -> Extend (admin/modules) enable the module.
+3. Configure the module settings at Administer -> Configuration -> User Interface (admin/config/user-interface/menu-breadcrumb).
 
 Upgrading
 ---------
@@ -23,17 +23,10 @@ Features
 - Allows you to use the menu the node belongs to for the breadcrumb on node pages.
 - Append the page title to the breadcrumb.
 - Optionally have the appended page title be an URL.
+- Remove the breadcrumb if it only contains Homepage link.
 
 Issues / Feature requests
 -------------------------
 If you find a bug, or have a feature request, please go to :
 
 http://drupal.org/project/issues/menu_breadcrumb
-
-Contact
--------
-This module is being maintained by me, Geoffrey de Vlugt (gdevlugt). 
-
-If you need to contact me, use the contact form at :
-
-http://drupal.org/user/167273/contact 
