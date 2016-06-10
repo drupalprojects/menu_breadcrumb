@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package Drupal\menu_breadcrumb\Form
  */
 class SettingsForm extends ConfigFormBase {
+
   /**
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
@@ -21,6 +22,7 @@ class SettingsForm extends ConfigFormBase {
 
   /**
    * SettingsForm constructor.
+   *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    */
@@ -49,37 +51,38 @@ class SettingsForm extends ConfigFormBase {
   /**
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
    * @return array
    */
   public function buildForm(array $form = [], FormStateInterface $form_state) {
     $config = $this->config('menu_breadcrumb.settings');
     $form['determine_menu'] = [
-      '#type'          => 'checkbox',
-      '#title'         => t('Use menu the page belongs to for the breadcrumb.'),
-      '#description'   => t('By default, Drupal builds breadcrumb on path basis. If you want to use the menu the active page belongs to for the breadcrumb, enable this option.'),
+      '#type' => 'checkbox',
+      '#title' => t('Use menu the page belongs to for the breadcrumb.'),
+      '#description' => t('By default, Drupal builds breadcrumb on path basis. If you want to use the menu the active page belongs to for the breadcrumb, enable this option.'),
       '#default_value' => $config->get('determine_menu'),
     ];
 
     $form['disable_admin_page'] = [
-      '#type'          => 'checkbox',
-      '#title'         => t('Disable for admin pages'),
-      '#description'   => t('Do not build menu-based breadcrumbs for admin pages.'),
+      '#type' => 'checkbox',
+      '#title' => t('Disable for admin pages'),
+      '#description' => t('Do not build menu-based breadcrumbs for admin pages.'),
       '#default_value' => $config->get('disable_admin_page'),
     ];
 
     $form['append_current_page'] = [
-      '#type'          => 'checkbox',
-      '#title'         => t('Append current page to breadcrumb'),
-      '#description'   => t('Choose whether or not the current page should be included in the breadcrumb.'),
+      '#type' => 'checkbox',
+      '#title' => t('Append current page to breadcrumb'),
+      '#description' => t('Choose whether or not the current page should be included in the breadcrumb.'),
       '#default_value' => $config->get('append_current_page'),
     ];
 
     $form['current_page_as_link'] = [
-      '#type'          => 'checkbox',
-      '#title'         => t('Current page as link'),
-      '#description'   => t('Choose whether or not the appended current page title should be a link.'),
+      '#type' => 'checkbox',
+      '#title' => t('Current page as link'),
+      '#description' => t('Choose whether or not the appended current page title should be a link.'),
       '#default_value' => $config->get('current_page_as_link'),
-      '#states'        => [
+      '#states' => [
         'visible' => [
           ':input[name="append_current_page"]' => ['checked' => TRUE],
         ],
@@ -87,24 +90,24 @@ class SettingsForm extends ConfigFormBase {
     ];
 
     $form['hide_on_single_item'] = [
-      '#type'          => 'checkbox',
-      '#title'         => t('Hide the breadcrumb if the breadcrumb only contains the link to the front page.'),
-      '#description'   => t('Choose whether or not the breadcrumb should be hidden if the breadcrumb only contains a link to the front page (<em>Home</em>.).'),
+      '#type' => 'checkbox',
+      '#title' => t('Hide the breadcrumb if the breadcrumb only contains the link to the front page.'),
+      '#description' => t('Choose whether or not the breadcrumb should be hidden if the breadcrumb only contains a link to the front page (<em>Home</em>.).'),
       '#default_value' => $config->get('hide_on_single_item'),
     ];
 
     $form['remove_home'] = [
-      '#type'          => 'checkbox',
-      '#title'         => t('Remove "Home" link'),
-      '#description'   => t('Removes "Home" link to the front page, in case you already have one.'),
+      '#type' => 'checkbox',
+      '#title' => t('Remove "Home" link'),
+      '#description' => t('Removes "Home" link to the front page, in case you already have one.'),
       '#default_value' => $config->get('remove_home'),
     ];
 
     $form['home_as_site_name'] = [
-      '#type'          => 'checkbox',
-      '#title'         => t('Use site name for "Home" link'),
+      '#type' => 'checkbox',
+      '#title' => t('Use site name for "Home" link'),
       '#default_value' => $config->get('home_as_site_name'),
-      '#states'        => [
+      '#states' => [
         'visible' => [
           ':input[name="remove_home"]' => ['checked' => FALSE],
         ],
@@ -112,8 +115,8 @@ class SettingsForm extends ConfigFormBase {
     ];
 
     $form['include_exclude'] = [
-      '#type'        => 'fieldset',
-      '#title'       => t('Enable / Disable Menus'),
+      '#type' => 'fieldset',
+      '#title' => t('Enable / Disable Menus'),
       '#description' => t('The breadcrumb will be generated from the first "enabled" menu that contains a menu item for the page. Re-order the list to change the priority of each menu.'),
     ];
 
@@ -123,14 +126,14 @@ class SettingsForm extends ConfigFormBase {
 
     // Orderable list of menu selections.
     $form['include_exclude']['menu_breadcrumb_menus'] = [
-      '#type'      => 'table',
-      '#header'    => [t('Menu'), t('Enabled'), t('Weight')],
-      '#empty'     => t('There is no menus yet.'),
+      '#type' => 'table',
+      '#header' => [t('Menu'), t('Enabled'), t('Weight')],
+      '#empty' => t('There is no menus yet.'),
       '#tabledrag' => [
         [
-          'action'       => 'order',
+          'action' => 'order',
           'relationship' => 'sibling',
-          'group'        => 'menus-order-weight',
+          'group' => 'menus-order-weight',
         ],
       ],
     ];
@@ -141,18 +144,18 @@ class SettingsForm extends ConfigFormBase {
         '#attributes' => [
           'class' => ['draggable'],
         ],
-        '#weight'     => $menu_config['weight'],
-        'title'       => [
+        '#weight' => $menu_config['weight'],
+        'title' => [
           '#plain_text' => $menu_config['label'],
         ],
-        'enabled'     => [
-          '#type'          => 'checkbox',
+        'enabled' => [
+          '#type' => 'checkbox',
           '#default_value' => $menu_config['enabled'],
         ],
-        'weight'      => [
-          '#type'          => 'weight',
+        'weight' => [
+          '#type' => 'weight',
           '#default_value' => $menu_config['weight'],
-          '#attributes'    => ['class' => ['menus-order-weight']],
+          '#attributes' => ['class' => ['menus-order-weight']],
         ],
       ];
     }
