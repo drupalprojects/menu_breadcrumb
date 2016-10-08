@@ -3,4 +3,6 @@ services:
     class: Drupal\menu_breadcrumb\MenuBasedBreadcrumbBuilder
     arguments: ['@config.factory', '@menu.active_trail', '@plugin.manager.menu.link', '@router.admin_context']
     tags:
-      - { name: breadcrumb_builder, priority: 100 }
+      # The priority must be higher than core taxonomy builder (priority: 1002)
+      # see https://www.drupal.org/node/1495510
+      - { name: breadcrumb_builder, priority: 1010 }

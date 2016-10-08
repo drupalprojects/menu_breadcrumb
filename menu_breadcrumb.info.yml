@@ -1,6 +1,6 @@
-name: Menu breadcrumb
+name: Menu Breadcrumb
 type: module
-description: 'Allows you to use the menu the current page belongs to for the breadcrumb.'
+description: 'Create breadcrumbs from nested menu titles and/or taxonomy membership.'
 version: VERSION
 core: 8.x
 configure: menu_breadcrumb.settings
