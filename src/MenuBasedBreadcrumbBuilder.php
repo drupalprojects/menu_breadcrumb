@@ -123,11 +123,11 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       // Look for current path on any enabled menu.
       if (!empty($params['enabled'])) {
 
-        $trailIds = $this->menuActiveTrail->getActiveTrailIds($menu_name);
-        $trailIds = array_filter($trailIds);
-        if ($trailIds) {
+        $trail_ids = $this->menuActiveTrail->getActiveTrailIds($menu_name);
+        $trail_ids = array_filter($trail_ids);
+        if ($trail_ids) {
           $this->menuName = $menu_name;
-          $this->menuTrail = $trailIds;
+          $this->menuTrail = $trail_ids;
           $this->taxonomyAttachment = NULL;
           return TRUE;
         }

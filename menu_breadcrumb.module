@@ -69,7 +69,6 @@ the breadcrumb for that taxonomy is <u>always</u> a link regardless of the
 that this breadcrumb <u>is not</u> for the current page, and must be a link
 because the current page is no anchored at all in the menu&hellip; unlike a
 breacrumb that isn't taxonomy-attached.)
-
 </p>
 EOT;
       break;
