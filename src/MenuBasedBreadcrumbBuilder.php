@@ -65,7 +65,7 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * Node of current path if taxonomy attached.
    *
-   * @var string
+   * @var \Drupal\node\Entity\Node
    */
   private $taxonomyAttachment;
 
