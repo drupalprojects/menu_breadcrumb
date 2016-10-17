@@ -31,17 +31,20 @@ Installation
 
 Upgrading
 ---------
-Replace the older menu_breadcrumb folder with the newer version, and
-then run update.php in case there are any database updates to apply.
+Recommended: install drush and run "drush up"
+
+Manually: replace the older menu_breadcrumb folder with the newer version;
+then run "update.php" if present (to install any configuration changes).
 
 NOTES if you have installed a Drupal 8 development version:
-
 If upgrading from the Alpha to the Beta version of the module, or to a
 newer Beta, if option settings are not producing the desired effect:
 
 - Try clearing the cache, which fixes breacrumb on taxonomy pages (since this
   module's breadcrumb builder needs to be acknolwedged as higher priority).
-- If that fails, try uninstalling & reinstalling the module.
+- Clearing the cache (at least the router cache) should clear up messages about
+  any services missing (known issue upgrading beta1 to beta2).
+- If all else fails, try uninstalling & reinstalling the module.
 
 
 Features
