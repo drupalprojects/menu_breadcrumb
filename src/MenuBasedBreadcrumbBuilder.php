@@ -6,6 +6,7 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
@@ -13,6 +14,7 @@ use Drupal\Core\Menu\MenuLinkManager;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * {@inheritdoc}
@@ -49,6 +51,27 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $adminContext;
 
   /**
+   * The title resolver.
+   *
+   * @var \Drupal\Core\Controller\TitleResolverInterface
+   */
+  protected $titleResolver;
+
+  /**
+   * The current request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $currentRequest;
+
+  /**
+   * The Menu Breadcrumbs configuration.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
    * The menu where the current page or taxonomy match has taken place.
    *
    * @var string
@@ -76,13 +99,17 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     ConfigFactory $config_factory,
     MenuActiveTrailInterface $menu_active_trail,
     MenuLinkManager $menu_link_manager,
-    AdminContext $admin_context
+    AdminContext $admin_context,
+    TitleResolverInterface $titleResolver,
+    RequestStack $requestStack
   ) {
     $this->configFactory = $config_factory;
     $this->menuActiveTrail = $menu_active_trail;
     $this->menuLinkManager = $menu_link_manager;
     $this->adminContext = $admin_context;
     $this->config = $this->configFactory->get('menu_breadcrumb.settings');
+    $this->titleResolver = $titleResolver;
+    $this->currentRequest = $requestStack->getCurrentRequest();
   }
 
   /**
@@ -201,6 +228,7 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       }
       $links[] = Link::fromTextAndUrl($def['title'], $url_object);
     }
+    $this->addMissingCurrentPage($links, $route_match);
 
     // Create a breadcrumb for <front> which may be either added or replaced:
     $label = $this->config->get('home_as_site_name') ?
@@ -236,37 +264,52 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       }
     }
 
-    // If there's been a taxonomy attachment, attach a link for the node itself
-    // as required by the option settings.  This leaves the active trail of the
-    // attached node fully breadcrumbed, regardless of "current_page" options.
-    if ($this->config->get('append_member_page') && $this->taxonomyAttachment) {
-
-      $current_title = $this->taxonomyAttachment->getTitle();
-      $current_url = Url::fromRoute($route_match->getRouteName(), $route_match->getRawParameters()->all());
-      if ($this->config->get('member_page_as_link')) {
-        $links[] = Link::fromTextAndUrl($current_title, $current_url);
-      }
-      else {
-        $links[] = Link::createFromRoute($current_title, '<none>');
-      }
-
-    }
-    else {
-      // Display the last item of the breadcrumbs trail as the options indicate,
-      // with a link for the last breadcrumb when there's a taxonomy attachment.
-      if (!empty($links)) {
-        /** @var Link $current */
-        $current = array_pop($links);
-        if ($this->config->get('append_current_page')) {
-          if (!$this->config->get('current_page_as_link') && !$this->taxonomyAttachment) {
-            $current->setUrl(new Url('<none>'));
-          }
-          array_push($links, $current);
+    if (!empty($links)) {
+      $page_type = $this->taxonomyAttachment ? 'member_page' : 'current_page';
+      // Display the last item of the breadcrumbs trail as the options indicate.
+      /** @var Link $current */
+      $current = array_pop($links);
+      if ($this->config->get('append_' . $page_type)) {
+        if (!$this->config->get($page_type . '_as_link')) {
+          $current->setUrl(new Url('<none>'));
         }
+        array_push($links, $current);
       }
     }
 
     return $breadcrumb->setLinks($links);
+  }
+
+  /**
+   * If the current page is missing from the breadcrumb links, add it.
+   *
+   * @param \Drupal\Core\Link[] $links
+   *   The breadcrumb links.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
+   */
+  protected function addMissingCurrentPage(array &$links, RouteMatchInterface $route_match) {
+    // Check if the current page is already present.
+    if (!empty($links)) {
+      $last_url = end($links)->getUrl();
+      if ($last_url->isRouted() &&
+        $last_url->getRouteName() === $route_match->getRouteName() &&
+        $last_url->getRouteParameters() === $route_match->getRawParameters()->all()
+      ) {
+        // We already have a link, no need to add one.
+        return;
+      }
+    }
+
+    // If we got here, the current page is missing from the breadcrumb links.
+    // This can happen if the active trail is only partial, and doesn't reach
+    // the current page, or if a taxonomy attachment is used.
+    $title = $this->titleResolver->getTitle($this->currentRequest,
+      $route_match->getRouteObject());
+    if (isset($title)) {
+      $links[] = Link::fromTextAndUrl($title,
+        Url::fromRouteMatch($route_match));
+    }
   }
 
 }
