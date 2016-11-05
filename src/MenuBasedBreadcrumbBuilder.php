@@ -7,12 +7,15 @@ use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\TitleResolverInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkManager;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -65,6 +68,20 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $currentRequest;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
    * The Menu Breadcrumbs configuration.
    *
    * @var \Drupal\Core\Config\Config
@@ -100,16 +117,20 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     MenuActiveTrailInterface $menu_active_trail,
     MenuLinkManager $menu_link_manager,
     AdminContext $admin_context,
-    TitleResolverInterface $titleResolver,
-    RequestStack $requestStack
+    TitleResolverInterface $title_resolver,
+    RequestStack $request_stack,
+    LanguageManager $language_manager,
+    EntityTypeManager $entity_type_manager
   ) {
     $this->configFactory = $config_factory;
     $this->menuActiveTrail = $menu_active_trail;
     $this->menuLinkManager = $menu_link_manager;
     $this->adminContext = $admin_context;
+    $this->titleResolver = $title_resolver;
+    $this->currentRequest = $request_stack->getCurrentRequest();
+    $this->languageManager = $language_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->config = $this->configFactory->get('menu_breadcrumb.settings');
-    $this->titleResolver = $titleResolver;
-    $this->currentRequest = $requestStack->getCurrentRequest();
   }
 
   /**
@@ -202,6 +223,15 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Breadcrumbs accumulate in this array, with lowest index being the root
     // (i.e., the reverse of the assigned breadcrumb trail):
     $links = array();
+    //
+    // Do we need to handle multilingual menu titles & cache based on language?
+    $translated = FALSE;
+    if (count($this->languageManager->getLanguages()) > 1) {
+      $language = $this->languageManager->getCurrentLanguage();
+      $langcode = $language->getId();
+      $breadcrumb->addCacheContexts(['languages:language_content']);
+      $translated = TRUE;
+    }
 
     // Changing the <front> page will invalidate any breadcrumb generated here:
     $site_config = $this->configFactory->get('system.site');
@@ -218,6 +248,13 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Keep same link ordering as Menu Breadcrumb (so also reverses menu trail)
     foreach (array_reverse($this->menuTrail) as $id) {
       $def = $this->menuLinkManager->getDefinition($id);
+      if ($translated) {
+        $entity = $this->entityTypeManager->getStorage('menu_link_content')->load($def['metadata']['entity_id']);
+        if ($entity instanceof TranslatableInterface && $entity->hasTranslation($langcode)) {
+          $parent = $entity->getTranslation($langcode);
+          $def['title'] = $parent->getTitle();
+        }
+      }
       $def_route_name = $def['route_name'];
       if ($def_route_name) {
         $url_object = Url::fromRoute($def_route_name, $def['route_parameters']);
@@ -276,7 +313,6 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         array_push($links, $current);
       }
     }
-
     return $breadcrumb->setLinks($links);
   }
 
