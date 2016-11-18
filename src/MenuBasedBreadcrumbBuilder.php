@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
@@ -227,7 +228,7 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Do we need to handle multilingual menu titles & cache based on language?
     $translated = FALSE;
     if (count($this->languageManager->getLanguages()) > 1) {
-      $language = $this->languageManager->getCurrentLanguage();
+      $language = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
       $langcode = $language->getId();
       $breadcrumb->addCacheContexts(['languages:language_content']);
       $translated = TRUE;
