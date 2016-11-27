@@ -7,7 +7,7 @@ use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\TitleResolverInterface;
-use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
@@ -78,7 +78,7 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -121,7 +121,7 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     TitleResolverInterface $title_resolver,
     RequestStack $request_stack,
     LanguageManager $language_manager,
-    EntityTypeManager $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->configFactory = $config_factory;
     $this->menuActiveTrail = $menu_active_trail;
