@@ -5,18 +5,16 @@ namespace Drupal\menu_breadcrumb;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
-use Drupal\Core\Menu\MenuLinkManager;
+use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -114,13 +112,13 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function __construct(
-    ConfigFactory $config_factory,
+    ConfigFactoryInterface $config_factory,
     MenuActiveTrailInterface $menu_active_trail,
-    MenuLinkManager $menu_link_manager,
+    MenuLinkManagerInterface $menu_link_manager,
     AdminContext $admin_context,
     TitleResolverInterface $title_resolver,
     RequestStack $request_stack,
-    LanguageManager $language_manager,
+    LanguageManagerInterface $language_manager,
     EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->configFactory = $config_factory;
@@ -219,19 +217,13 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
-
     $breadcrumb = new Breadcrumb();
     // Breadcrumbs accumulate in this array, with lowest index being the root
     // (i.e., the reverse of the assigned breadcrumb trail):
     $links = array();
-    //
-    // Do we need to handle multilingual menu titles & cache based on language?
-    $translated = FALSE;
-    if (count($this->languageManager->getLanguages()) > 1) {
-      $language = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
-      $langcode = $language->getId();
+
+    if (count($this->languageManager->isMultilingual()) > 1) {
       $breadcrumb->addCacheContexts(['languages:language_content']);
-      $translated = TRUE;
     }
 
     // Changing the <front> page will invalidate any breadcrumb generated here:
@@ -248,30 +240,16 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Generate basic breadcrumb trail from active trail.
     // Keep same link ordering as Menu Breadcrumb (so also reverses menu trail)
     foreach (array_reverse($this->menuTrail) as $id) {
-      $def = $this->menuLinkManager->getDefinition($id);
-      if ($translated) {
-        $entity = $this->entityTypeManager->getStorage('menu_link_content')->load($def['metadata']['entity_id']);
-        if ($entity instanceof TranslatableInterface && $entity->hasTranslation($langcode)) {
-          $parent = $entity->getTranslation($langcode);
-          $def['title'] = $parent->getTitle();
-        }
-      }
-      $def_route_name = $def['route_name'];
-      if ($def_route_name) {
-        $url_object = Url::fromRoute($def_route_name, $def['route_parameters']);
-      }
-      else {
-        // If no route, it's an external URI (issue 2750821):
-        $url_object = Url::fromUri($def['url']);
-      }
-      $links[] = Link::fromTextAndUrl($def['title'], $url_object);
+      $plugin = $this->menuLinkManager->createInstance($id);
+      $links[] = Link::fromTextAndUrl($plugin->getTitle(), $plugin->getUrlObject());
+      $breadcrumb->addCacheableDependency($plugin);
     }
     $this->addMissingCurrentPage($links, $route_match);
 
     // Create a breadcrumb for <front> which may be either added or replaced:
     $label = $this->config->get('home_as_site_name') ?
       $this->configFactory->get('system.site')->get('name') :
-      t('Home');
+      $this->t('Home');
     $home_link = Link::createFromRoute($label, '<front>');
 
     // The first link from the menu trail, being the root, may be the
