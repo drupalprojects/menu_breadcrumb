@@ -222,7 +222,7 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // (i.e., the reverse of the assigned breadcrumb trail):
     $links = array();
 
-    if (count($this->languageManager->isMultilingual()) > 1) {
+    if ($this->languageManager->isMultilingual()) {
       $breadcrumb->addCacheContexts(['languages:language_content']);
     }
 
