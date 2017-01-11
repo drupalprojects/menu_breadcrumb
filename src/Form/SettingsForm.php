@@ -62,8 +62,8 @@ class SettingsForm extends ConfigFormBase {
     // Renamed from the now meaningless option "determine_menu":
     $form['determine_menu'] = [
       '#type' => 'checkbox',
-      '#title' => t('Enable the Menu Breadcrumb module'),
-      '#description' => t(
+      '#title' => $this->t('Enable the Menu Breadcrumb module'),
+      '#description' => $this->t(
       'Use menu the page belongs to, or the page for the taxonomy of which it is a member, for the breadcrumb. If unset, no breadcrumbs are generated or cached by this module and all settings below are ignored.'
       ),
       '#default_value' => $config->get('determine_menu'),
@@ -71,22 +71,22 @@ class SettingsForm extends ConfigFormBase {
 
     $form['disable_admin_page'] = [
       '#type' => 'checkbox',
-      '#title' => t('Disable for admin pages'),
-      '#description' => t('Do not build menu-based breadcrumbs for admin pages.'),
+      '#title' => $this->t('Disable for admin pages'),
+      '#description' => $this->t('Do not build menu-based breadcrumbs for admin pages.'),
       '#default_value' => $config->get('disable_admin_page'),
     ];
 
     $form['append_current_page'] = [
       '#type' => 'checkbox',
-      '#title' => t('Append current page to breadcrumb'),
-      '#description' => t('If current page is on a menu, include it in the breadcrumb trail.'),
+      '#title' => $this->t('Append current page to breadcrumb'),
+      '#description' => $this->t('If current page is on a menu, include it in the breadcrumb trail.'),
       '#default_value' => $config->get('append_current_page'),
     ];
 
     $form['current_page_as_link'] = [
       '#type' => 'checkbox',
-      '#title' => t('Show current page as link'),
-      '#description' => t('Set TRUE if the current page in the breadcrumb trail should be a link (otherwise it will be plain text).'),
+      '#title' => $this->t('Show current page as link'),
+      '#description' => $this->t('Set TRUE if the current page in the breadcrumb trail should be a link (otherwise it will be plain text).'),
       '#default_value' => $config->get('current_page_as_link'),
       '#states' => [
         'visible' => [
@@ -97,15 +97,15 @@ class SettingsForm extends ConfigFormBase {
 
     $form['append_member_page'] = [
       '#type' => 'checkbox',
-      '#title' => t('Attach taxonomy member page to breadcrumb'),
-      '#description' => t('This option affects breadcrumb display when the current page is a member of a taxonomy whose term is on a menu with "Taxonomy Attachment" selected, when it "attaches" to the menu-based breadcrumbs of that taxonomy term. In this case that term\'s menu title will show as a link regardless of the "current page" options above. Set this option TRUE to also show the the current ("attached") <i>page</i> title as the final breadcrumb.'),
+      '#title' => $this->t('Attach taxonomy member page to breadcrumb'),
+      '#description' => $this->t('This option affects breadcrumb display when the current page is a member of a taxonomy whose term is on a menu with "Taxonomy Attachment" selected, when it "attaches" to the menu-based breadcrumbs of that taxonomy term. In this case that term\'s menu title will show as a link regardless of the "current page" options above. Set this option TRUE to also show the the current ("attached") <i>page</i> title as the final breadcrumb.'),
       '#default_value' => $config->get('append_member_page'),
     ];
 
     $form['member_page_as_link'] = [
       '#type' => 'checkbox',
-      '#title' => t('Show attached current page as link'),
-      '#description' => t('Set TRUE to show the attached final breadcrumb as a link (otherwise it will be plain text).'),
+      '#title' => $this->t('Show attached current page as link'),
+      '#description' => $this->t('Set TRUE to show the attached final breadcrumb as a link (otherwise it will be plain text).'),
       '#default_value' => $config->get('member_page_as_link'),
       '#states' => [
         'visible' => [
@@ -122,44 +122,44 @@ class SettingsForm extends ConfigFormBase {
     //
     $form['remove_home'] = [
       '#type' => 'checkbox',
-      '#title' => t('Remove "Home" link'),
+      '#title' => $this->t('Remove "Home" link'),
       '#default_value' => $config->get('remove_home'),
-      '#description' => t('Regardless of option settings, this module always checks if the first breadcrumb is also the &lt;front&gt; page. Without this option set, it will always replace the link for that node- or view- based path of the &lt;front&gt; page (e.g., /node/1 or /node) with a link to the site home. Set this option TRUE to <i>delete</i> the &lt;front&gt; breadcrumb rather than replacing it.'),
+      '#description' => $this->t('Regardless of option settings, this module always checks if the first breadcrumb is also the &lt;front&gt; page. Without this option set, it will always replace the link for that node- or view- based path of the &lt;front&gt; page (e.g., /node/1 or /node) with a link to the site home. Set this option TRUE to <i>delete</i> the &lt;front&gt; breadcrumb rather than replacing it.'),
     ];
 
     $form['add_home'] = [
       '#type' => 'checkbox',
-      '#title' => t('Add "Home" link'),
+      '#title' => $this->t('Add "Home" link'),
       '#default_value' => $config->get('add_home'),
-      '#description' => t('If TRUE will add a link to the &lt;front&gt; page if it doesn\'t already begin the breadcrumb trail: ensuring that the first breadcrumb of every page is the site home. If both "add" and "remove" are set, when displaying the &lt;front&gt; page and its menu children the "remove" option will take precedence.'),
+      '#description' => $this->t('If TRUE will add a link to the &lt;front&gt; page if it doesn\'t already begin the breadcrumb trail: ensuring that the first breadcrumb of every page is the site home. If both "add" and "remove" are set, when displaying the &lt;front&gt; page and its menu children the "remove" option will take precedence.'),
     ];
 
     $form['home_as_site_name'] = [
       '#type' => 'checkbox',
-      '#title' => t('Use site name instead of "Home" link'),
-      '#description' => t('Uses the site name from the configuration settings: if this option is not set, a translated value for "Home" will be used.'),
+      '#title' => $this->t('Use site name instead of "Home" link'),
+      '#description' => $this->t('Uses the site name from the configuration settings: if this option is not set, a translated value for "Home" will be used.'),
       '#default_value' => $config->get('home_as_site_name'),
     ];
 
     $form['include_exclude'] = [
       '#type' => 'fieldset',
-      '#title' => t('Enable / Disable Menus'),
-      '#description' => t('<b>Order of operation:</b> The breadcrumb will be generated from the first match it finds: "Enabled" to look for the current item on the menu, then "Taxonomy Attachment" to look for its taxonomy term. Re-order the list to change the priority of each menu.'),
+      '#title' => $this->t('Enable / Disable Menus'),
+      '#description' => $this->t('<b>Order of operation:</b> The breadcrumb will be generated from the first match it finds: "Enabled" to look for the current item on the menu, then "Taxonomy Attachment" to look for its taxonomy term. Re-order the list to change the priority of each menu.'),
     ];
     $form['include_exclude']['note_about_navigation'] = [
-      '#markup' => '<p class="description">' . t("Note: If none of the selected menus contain an item for a given page, Drupal will look in the 'Navigation' menu by default, even if it is 'disabled' here.") . '</p>',
+      '#markup' => '<p class="description">' . $this->t("Note: If none of the selected menus contain an item for a given page, Drupal will look in the 'Navigation' menu by default, even if it is 'disabled' here.") . '</p>',
     ];
 
     // Orderable list of menu selections.
     $form['include_exclude']['menu_breadcrumb_menus'] = [
       '#type' => 'table',
       '#header' => [
-        t('Menu'),
-        t('Enabled'),
-        t('Taxonomy Attachment'),
-        t('Weight'),
+        $this->t('Menu'),
+        $this->t('Enabled'),
+        $this->t('Taxonomy Attachment'),
+        $this->t('Weight'),
       ],
-      '#empty' => t('There are no menus yet.'),
+      '#empty' => $this->t('There are no menus yet.'),
       '#tabledrag' => [
         [
           'action' => 'order',
