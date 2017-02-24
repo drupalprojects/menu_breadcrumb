@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
@@ -247,9 +248,10 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->addMissingCurrentPage($links, $route_match);
 
     // Create a breadcrumb for <front> which may be either added or replaced:
+    $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
     $label = $this->config->get('home_as_site_name') ?
       $this->configFactory->get('system.site')->get('name') :
-      $this->t('Home');
+      $this->t('Home', array(), array('langcode' => $langcode));
     $home_link = Link::createFromRoute($label, '<front>');
 
     // The first link from the menu trail, being the root, may be the
