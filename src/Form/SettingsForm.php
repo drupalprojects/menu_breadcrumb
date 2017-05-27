@@ -144,7 +144,7 @@ class SettingsForm extends ConfigFormBase {
     $form['include_exclude'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Enable / Disable Menus'),
-      '#description' => $this->t('<b>Order of operation:</b> The breadcrumb will be generated from the first match it finds: "Enabled" to look for the current item on the menu, then "Taxonomy Attachment" to look for its taxonomy term. Re-order the list to change the priority of each menu.'),
+      '#description' => $this->t('<b>Order of operation:</b> The breadcrumb will be generated from the first match it finds: "Enabled" to look for the current item on the menu, then "Taxonomy Attachment" to look for its taxonomy term. Re-order the list to change the priority of each menu.<br><b>Language Handling:</b> If set, skip this menu when the defined menu language does not match the current content language: recommended setting when you use a separate menu per language. This has no effect on taxonomy attachment.'),
     ];
     $form['include_exclude']['note_about_navigation'] = [
       '#markup' => '<p class="description">' . $this->t("Note: If none of the selected menus contain an item for a given page, Drupal will look in the 'Navigation' menu by default, even if it is 'disabled' here.") . '</p>',
@@ -157,6 +157,7 @@ class SettingsForm extends ConfigFormBase {
         $this->t('Menu'),
         $this->t('Enabled'),
         $this->t('Taxonomy Attachment'),
+        $this->t('Language Handling'),
         $this->t('Weight'),
       ],
       '#empty' => $this->t('There are no menus yet.'),
@@ -186,6 +187,10 @@ class SettingsForm extends ConfigFormBase {
         'taxattach' => [
           '#type' => 'checkbox',
           '#default_value' => $menu_config['taxattach'],
+        ],
+        'langhandle' => [
+          '#type' => 'checkbox',
+          '#default_value' => $menu_config['langhandle'],
         ],
         'weight' => [
           '#type' => 'weight',
@@ -231,8 +236,8 @@ class SettingsForm extends ConfigFormBase {
   /**
    * Get Sorted Menus.
    *
-   * Returns array of menus with properties (enabled, taxattach, weight, label)
-   * sorted by weight, initializing those properties if necessary.
+   * Returns array of menus with properties (enabled, taxattach, langhandle,
+   * weight, label) sorted by weight, initializing those properties if needed.
    */
   protected function getSortedMenus() {
     $menu_enabled = $this->moduleHandler->moduleExists('menu_ui');
@@ -242,10 +247,13 @@ class SettingsForm extends ConfigFormBase {
     foreach ($menus as $menu_name => &$menu) {
       if (!empty($menu_breadcrumb_menus[$menu_name])) {
         $menu = $menu_breadcrumb_menus[$menu_name] + ['label' => $menu];
-        // Earlier versions of the module wouldn't have this array index set.
-        // TODO Remove this when alpha version is finally off the boards.
+        // Earlier versions of the module might not have these array keys set.
+        // TODO Maybe set these for existing menu definitions in upgrade script?
         if (!isset($menu['taxattach'])) {
           $menu['taxattach'] = 0;
+        }
+        if (!isset($menu['langhandle'])) {
+          $menu['langhandle'] = 0;
         }
       }
       else {
@@ -253,6 +261,7 @@ class SettingsForm extends ConfigFormBase {
           'weight' => 0,
           'enabled' => 0,
           'taxattach' => 0,
+          'langhandle' => 0,
           'label' => $menu,
         ];
       }

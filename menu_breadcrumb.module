@@ -33,6 +33,11 @@ it will inherit the taxonomy page's menu breadcrumbs (e.g., to provide
 breadcrumbs for blog entries that aren't on menus themselves).
   </li>
   <li>
+If the "Language Handling" option is selected for a menu,
+the menu will not be breadcrumbed unless its defined language matches
+the current content language (recommended when you use a separate menu per language).
+  </li>
+  <li>
 When the current page cannot be breadcrumbed according to the menu selections,
 it will not generate a breadcrumb at all, and another breadcrumb builder of lower
 priority will be free to generate the breadcrumb.
@@ -79,7 +84,8 @@ EOT;
 <p>
 Select the first option to enable the Menu Breadcrumb module,
 which will generate a breadcrumb trail the first match
-in the selected menu below: first looking for the current page on a menu,
+in the selected menu below: first looking for the current page on a menu
+(unless avoiding that menu due to language settings),
 and then seeing if the current page belongs to a taxonomy on that menu
 (whose breadcrumbs it will then inherit).
 </p>
@@ -90,7 +96,7 @@ a breadcrumb will neither be generated nor cached and another breadcrumb builder
 will be free to set the breadcrumb.
 </p>
 <p>
-For more details, see Help for this module.
+For more details, see <a href="admin/help/menu_breadcrumb">Menu Breadcrumb Help</a>.
 </p>
 EOT;
       break;

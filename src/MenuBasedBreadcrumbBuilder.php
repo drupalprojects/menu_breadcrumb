@@ -183,15 +183,17 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       // Look for current path on any enabled menu.
       if (!empty($params['enabled'])) {
 
-        // Skip over any menu that's not in the current content language.
-        // TODO This also skips checking taxonomy attachment for that menu: OK?
-        // (see https://www.drupal.org/node/2840178#comment-11851137)
-        $menu_objects = $this->entityTypeManager->getStorage('menu')
-          ->loadByProperties(['id' => $menu_name]);
-        if ($menu_objects) {
-          $menu_language = reset($menu_objects)->language()->getId();
-          if ($menu_language != $this->contentLanguage) {
-            continue;
+        // Skip over any menu that's not in the current content language,
+        //   if and only if the "language handling" option set for that menu.
+        // NOTE this menu option is added late, so we check its existence first.
+        if (array_key_exists('langhandle', $params) && $params['langhandle']) {
+          $menu_objects = $this->entityTypeManager->getStorage('menu')
+            ->loadByProperties(['id' => $menu_name]);
+          if ($menu_objects) {
+            $menu_language = reset($menu_objects)->language()->getId();
+            if ($menu_language != $this->contentLanguage) {
+              continue;
+            }
           }
         }
 
@@ -205,7 +207,7 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         }
       }
 
-      // Look for a "taxonomy attachment" by node field.
+      // Look for a "taxonomy attachment" by node field, regardless of language.
       if (!empty($params['taxattach']) && $node_is_fieldable) {
 
         // Check all taxonomy terms applying to the current page.

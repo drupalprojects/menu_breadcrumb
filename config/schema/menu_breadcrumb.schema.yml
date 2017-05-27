@@ -43,4 +43,7 @@ menu_breadcrumb.settings:
             label: 'Weight'
           taxattach:
             type: integer
-            label: 'Taxonomy Attach'
+            label: 'Taxonomy Attachment'
+          langhandle:
+            type: integer
+            label: 'Language Handling'
