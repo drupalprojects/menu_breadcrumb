@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Link;
@@ -191,7 +192,9 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             ->loadByProperties(['id' => $menu_name]);
           if ($menu_objects) {
             $menu_language = reset($menu_objects)->language()->getId();
-            if ($menu_language != $this->contentLanguage) {
+            if ($menu_language != $this->contentLanguage &&
+              $menu_language !== Language::LANGCODE_NOT_SPECIFIED &&
+              $menu_language !== Language::LANGCODE_NOT_APPLICABLE) {
               continue;
             }
           }
