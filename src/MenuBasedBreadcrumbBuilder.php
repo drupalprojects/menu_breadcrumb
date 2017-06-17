@@ -273,6 +273,15 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $plugin = $this->menuLinkManager->createInstance($id);
       $links[] = Link::fromTextAndUrl($plugin->getTitle(), $plugin->getUrlObject());
       $breadcrumb->addCacheableDependency($plugin);
+      // In the last line the MenuLinkContent plugin is not providing cache tags.
+      // Until this is fixed in core add the tags here:
+      if ($plugin instanceof \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent) {
+        $uuid = $plugin->getDerivativeId();
+        $entities = $this->entityTypeManager->getStorage('menu_link_content')->loadByProperties(['uuid' => $uuid]);
+        if ($entity = reset($entities)) {
+          $breadcrumb->addCacheableDependency($entity);
+        }
+      }
     }
     $this->addMissingCurrentPage($links, $route_match);
 
