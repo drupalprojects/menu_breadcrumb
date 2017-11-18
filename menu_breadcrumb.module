@@ -96,7 +96,7 @@ a breadcrumb will neither be generated nor cached and another breadcrumb builder
 will be free to set the breadcrumb.
 </p>
 <p>
-For more details, see <a href="admin/help/menu_breadcrumb">Menu Breadcrumb Help</a>.
+For more details, see <a href="/admin/help/menu_breadcrumb">Menu Breadcrumb Help</a>.
 </p>
 EOT;
       break;
