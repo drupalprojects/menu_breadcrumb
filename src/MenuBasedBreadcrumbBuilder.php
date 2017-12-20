@@ -250,7 +250,8 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $breadcrumb = new Breadcrumb();
     // Breadcrumbs accumulate in this array, with lowest index being the root
     // (i.e., the reverse of the assigned breadcrumb trail):
-    $links = array();
+    $links = [];
+    // (https://www.drupal.org/docs/develop/standards/coding-standards#array)
 
     if ($this->languageManager->isMultilingual()) {
       $breadcrumb->addCacheContexts(['languages:language_content']);
@@ -289,7 +290,8 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $langcode = $this->contentLanguage;
     $label = $this->config->get('home_as_site_name') ?
       $this->configFactory->get('system.site')->get('name') :
-      $this->t('Home', array(), array('langcode' => $langcode));
+      $this->t('Home', [], ['langcode' => $langcode]);
+      // (https://www.drupal.org/docs/develop/standards/coding-standards#array)
     $home_link = Link::createFromRoute($label, '<front>');
 
     // The first link from the menu trail, being the root, may be the
