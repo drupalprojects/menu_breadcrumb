@@ -264,9 +264,10 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Changing any module settings will invalidate the breadcrumb:
     $breadcrumb->addCacheableDependency($this->config);
 
-    // Changing the active trail of the current path, or taxonomy-attached path,
-    // on this menu will invalidate this breadcrumb:
+    // Changing the active trail or URL, of either the current path or the
+    // taxonomy-attached path, on this menu will invalidate this breadcrumb:
     $breadcrumb->addCacheContexts(['route.menu_active_trails:' . $this->menuName]);
+    $breadcrumb->addCacheContexts(['url.path']);
 
     // Generate basic breadcrumb trail from active trail.
     // Keep same link ordering as Menu Breadcrumb (so also reverses menu trail)
