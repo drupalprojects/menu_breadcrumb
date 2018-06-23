@@ -272,6 +272,12 @@ class MenuBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Keep same link ordering as Menu Breadcrumb (so also reverses menu trail)
     foreach (array_reverse($this->menuTrail) as $id) {
       $plugin = $this->menuLinkManager->createInstance($id);
+
+      // Skip items that have an empty URL if the option is set.
+      if ($this->config->get('exclude_empty_url') && empty($plugin->getUrlObject()->toString())) {
+        continue;
+      }
+
       $links[] = Link::fromTextAndUrl($plugin->getTitle(), $plugin->getUrlObject());
       $breadcrumb->addCacheableDependency($plugin);
       // In the last line the MenuLinkContent plugin is not providing cache tags.
